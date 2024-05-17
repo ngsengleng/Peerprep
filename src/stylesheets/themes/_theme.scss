@@ -1,0 +1,11 @@
+:root {
+  background-color: $base-color;
+  color: $text-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    background-color: $base-color-light;
+    color: $text-color-light;
+  }
+}
