@@ -1,5 +1,7 @@
 import { useState } from "react";
 import SubmitButton from "../../components/SubmitButton";
+import { IconEye, IconEyeInvisible } from "../../components/svg";
+import { Link } from "react-router-dom";
 
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 type FormEvent = React.FormEvent<HTMLFormElement>;
@@ -7,6 +9,7 @@ type FormEvent = React.FormEvent<HTMLFormElement>;
 export default function LoginPage() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [isInvalidUsername, setIsInvalidUsername] = useState<boolean>(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false);
 
@@ -56,20 +59,33 @@ export default function LoginPage() {
             )}
           </div>
           <div className="login-grid-container">
-            <input
-              placeholder="Password"
-              value={password}
-              className="input-box"
-              type="password"
-              name="password"
-              onChange={handlePasswordChange}
-            />
+            <div className="password-group">
+              <input
+                placeholder="Password"
+                value={password}
+                className="password-box"
+                type={isPasswordVisible ? "text" : "password"}
+                name="password"
+                onChange={handlePasswordChange}
+              />
+              <button
+                className="visible-button"
+                type="button"
+                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+              >
+                {isPasswordVisible ? <IconEye /> : <IconEyeInvisible />}
+              </button>
+            </div>
+
             {isInvalidPassword && (
               <span className="error-text">password cannot be empty</span>
             )}
           </div>
           <div className="login-grid-container">
             <SubmitButton text={"Sign in"} />
+          </div>
+          <div className="login-grid-container">
+            <Link to={"/signup"}>Create an account</Link>
           </div>
         </form>
       </div>
