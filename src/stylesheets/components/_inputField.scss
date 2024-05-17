@@ -1,0 +1,23 @@
+$input-size: 1rem;
+
+.error-text {
+  color: hsl(0, 100%, 50%);
+  text-align: left;
+  padding-left: 15px;
+}
+
+.input-box {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: $contrast-dark;
+  margin: 0 10px;
+  padding: 10px;
+  height: $input-size;
+  font-size: $input-size;
+  font-family: inherit;
+}
+
+.input-box:focus {
+  border-color: $contrast-light;
+  outline: none;
+}
