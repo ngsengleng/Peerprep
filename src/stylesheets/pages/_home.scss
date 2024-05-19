@@ -19,66 +19,21 @@
   width: 200px;
 }
 
-.display-table-container {
-  overflow-y: scroll;
-  height: 300px;
-  scrollbar-color: $contrast-dark $base-color;
-  scrollbar-width: thin;
-  border-radius: 10px;
-}
-
-.display-table {
-  width: 100%;
-}
-
-.display-table-row--odd {
-  padding: 5px 0;
+.home-modal-input {
+  width: 80%;
   height: 2rem;
-  background-color: #525252;
-}
-
-.display-table-row--even {
-  padding: 5px 0;
-  height: 2rem;
-  background-color: #242424;
-}
-
-.pagination-container {
-  margin: 15px 0;
-  display: flex;
-  justify-content: end;
-}
-
-.pagination {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.pagination-button--unselected {
-  margin: 0 1px;
-  border-style: solid;
-  border-color: $contrast-dark;
-  border-radius: 5px;
-  width: 30px;
-  height: 30px;
+  border-style: none;
+  border-radius: 30px;
+  font-size: 1rem;
   text-align: center;
 }
 
-.pagination-button--selected {
-  margin: 0 1px;
-  border-style: solid;
-  border-color: $contrast-dark;
-  background-color: $contrast-dark;
-  color: $contrast-light;
+.home-modal-button {
+  width: 200px;
+  height: 2rem;
+  margin: 20px 0;
+  border-style: none;
   border-radius: 5px;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-}
-
-.pagination li:hover {
-  cursor: pointer;
-  text-decoration: underline;
+  background-color: $contrast-light;
+  color: $contrast-dark;
 }
