@@ -1,0 +1,39 @@
+.home-title {
+  margin-top: 150px;
+  margin-bottom: 50px;
+}
+
+.home-button-group {
+  margin-bottom: 100px;
+}
+
+.home-redirect-button {
+  margin: 0 15px;
+  font-size: 1rem;
+  background-color: $contrast-dark;
+  color: $base-color;
+  border-style: none;
+  border-radius: 5px;
+  height: 2.5rem;
+  padding: 5px;
+  width: 200px;
+}
+
+.home-modal-input {
+  width: 80%;
+  height: 2rem;
+  border-style: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.home-modal-button {
+  width: 200px;
+  height: 2rem;
+  margin: 20px 0;
+  border-style: none;
+  border-radius: 5px;
+  background-color: $contrast-light;
+  color: $contrast-dark;
+}

@@ -3,15 +3,18 @@
 @import "base/typography";
 
 @import "components/body";
+@import "components/displayTable";
 @import "components/formButton";
 @import "components/formGrid";
 @import "components/formGridItem";
 @import "components/heading";
 @import "components/inputField";
+@import "components/modal";
 @import "components/passwordField";
 @import "components/root";
 
 @import "pages/error";
+@import "pages/home";
 @import "pages/login";
 @import "pages/signup";
 

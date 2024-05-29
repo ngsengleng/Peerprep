@@ -35,7 +35,7 @@ export default function LoginPage() {
   };
   return (
     <>
-      <div className="page-title">
+      <div className="login-title">
         <h1>PeerPrep</h1>
         <p>
           <b>Collaborative coding interview preparation made easy</b>
@@ -67,7 +67,7 @@ export default function LoginPage() {
             />
           </FormGridItem>
           <FormGridItem>
-            <button className="submit-button" type="submit">
+            <button className="form-button" type="submit">
               <b>Sign in</b>
             </button>
           </FormGridItem>

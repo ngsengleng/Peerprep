@@ -56,7 +56,7 @@ export default function SignupPage() {
       <FormGrid>
         <form onSubmit={handleSubmit}>
           <FormGridItem>
-            <h2>Sign up</h2>
+            <h2>Sign up for PeerPrep!</h2>
           </FormGridItem>
           <FormGridItem>
             <InputField
@@ -95,7 +95,7 @@ export default function SignupPage() {
             />
           </FormGridItem>
           <FormGridItem>
-            <button className="submit-button" type="submit">
+            <button className="form-button" type="submit">
               <b>Sign up</b>
             </button>
           </FormGridItem>
