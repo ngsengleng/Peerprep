@@ -10,6 +10,7 @@ import ErrorPage from "./pages/ErrorPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import SignupPage from "./pages/SignupPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
+
 const router = createBrowserRouter([
   {
     errorElement: <ErrorPage />,
