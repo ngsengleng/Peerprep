@@ -22,7 +22,6 @@ export default function HomePage() {
     uniqueNamesGenerator(generatorNameConfig)
   );
   const handleChange = (event: FormInputEvent) => {
-    console.log(event.target.value);
     setSessionName(event.target.value);
   };
   const handleSubmit = () => {
