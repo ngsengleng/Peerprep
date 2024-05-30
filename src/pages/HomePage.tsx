@@ -9,6 +9,7 @@ import {
   colors,
   uniqueNamesGenerator,
 } from "unique-names-generator";
+import { useNavigate } from "react-router-dom";
 
 const generatorNameConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -17,6 +18,7 @@ const generatorNameConfig: Config = {
 };
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [isHidden, setIsHidden] = useState<boolean>(true);
   const [sessionName, setSessionName] = useState<string>(
     uniqueNamesGenerator(generatorNameConfig)
@@ -27,6 +29,7 @@ export default function HomePage() {
   const handleSubmit = () => {
     console.log(sessionName); // TODO: pass to backend websocket to initiate a room
     setIsHidden(true);
+    navigate(`/session/${sessionName}`);
   };
   return (
     <>

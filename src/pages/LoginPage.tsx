@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormGridItem from "../components/FormGridItem";
 import FormGrid from "../components/FormGrid";
 import { SubmitFormEvent, FormInputEvent } from "../types";
@@ -7,6 +7,7 @@ import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -32,6 +33,7 @@ export default function LoginPage() {
       return;
     }
     console.log("login"); // TODO: handle login and redirect
+    navigate("/home");
   };
   return (
     <>
