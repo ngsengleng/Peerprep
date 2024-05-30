@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+# PeerPrep
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project was originally from a module during the school term to elaborate the usefulness of microservices; I intend to do a rehash of the original project with nicer UI as well as a more concurrent backend with Golang instead of node.js, as well as include some CI/CD processes so that I can host it via free hosting services
 
-Currently, two official plugins are available:
+this project uses the plugin [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) ([SWC](https://swc.rs/)) for Fast Refresh
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Installation
 
-## Expanding the ESLint configuration
+run `yarn install` in the root directory
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Running the dev environment
 
-- Configure the top-level `parserOptions` property like this:
+run `yarn dev` in the root directory
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### File structure
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- stylesheets are written with `sass` using the 7-1 architecture design pattern with a main file that imports all relevant stylesheets
+- Each application page has its own file with shared components extracted out to a common component folder
+
+### Progress:
+
+- Only frontend code has been written, no backend functionality has been implemented
+- some implementations on the frontend may change depending on how endpoints are written; currently alot of dynamic elements are hardcoded
+
+### Todo:
+
+- can refer to the issues section in the repository on what is to be implemented
+- ideally API contracts are drawn up using Protobuf

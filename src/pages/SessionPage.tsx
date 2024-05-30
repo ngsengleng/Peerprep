@@ -174,7 +174,7 @@ export default function SessionPage() {
             </div>
           </div>
         </div>
-        <div className="session-section">this is the right</div>
+        <div className="session-section">this is the coding window</div>
       </div>
     </>
   );
