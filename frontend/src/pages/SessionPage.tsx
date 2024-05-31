@@ -179,7 +179,9 @@ export default function SessionPage() {
             </div>
           </div>
         </div>
-        <div className="session-section">{/* <CodeEditor /> */}</div>
+        <div className="session-section">
+          <CodeEditor />
+        </div>
       </div>
     </>
   );
