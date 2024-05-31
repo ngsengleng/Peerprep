@@ -2,7 +2,7 @@ import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import TextSpace from "../components/TextSpace";
 import { FormInputEvent } from "../types";
 import Modal from "../components/Modal";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type ChatTextObject = {
   username: string;
@@ -10,6 +10,7 @@ type ChatTextObject = {
 };
 // text in this section are just placeholders, will be dynamically built with backend integration
 export default function SessionPage() {
+  const location = useLocation();
   const navigate = useNavigate();
   const username = "me"; // TODO: replace with actual username from context
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
@@ -45,6 +46,9 @@ export default function SessionPage() {
   useEffect(() => {
     scrollToBottom();
   }, [chatContent]);
+  useEffect(() => {
+    console.log(location.pathname.split("/").slice(-1)); // TODO: allow joining of session via url
+  }, [location.pathname]);
   return (
     <>
       <div className="session-navbar">
