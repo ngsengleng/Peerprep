@@ -1,9 +1,10 @@
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
 import TextSpace from "../components/TextSpace";
 import { FormInputEvent } from "../types";
 import Modal from "../components/Modal";
 import { useLocation, useNavigate } from "react-router-dom";
 import CodeEditor from "../components/CodeEditor";
+import { UserContext } from "../context/UserContext";
 
 type ChatTextObject = {
   username: string;
@@ -13,7 +14,7 @@ type ChatTextObject = {
 export default function SessionPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const username = "me"; // TODO: replace with actual username from context
+  const { user } = useContext(UserContext);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,7 +37,10 @@ export default function SessionPage() {
     if (chatInput == "") {
       return;
     }
-    const newChatObject: ChatTextObject = { username: "me", text: chatInput };
+    const newChatObject: ChatTextObject = {
+      username: user.username,
+      text: chatInput,
+    };
     setChatContent([...chatContent, newChatObject]);
     setChatInput("");
   };
@@ -49,6 +53,7 @@ export default function SessionPage() {
   }, [chatContent]);
   useEffect(() => {
     console.log(location.pathname.split("/").slice(-1)); // TODO: allow joining of session via url
+    // TODO: also, initialise websocket connection using this room name
   }, [location.pathname]);
   return (
     <>
@@ -129,7 +134,7 @@ export default function SessionPage() {
           <div className="session-chatbox">
             <div className="session-chatarea">
               {chatContent.map((value: ChatTextObject, index: number) => {
-                if (value.username == username) {
+                if (value.username == user.username) {
                   return (
                     <div key={index} className="chat-content__current">
                       <div className="chat-avatar" />
