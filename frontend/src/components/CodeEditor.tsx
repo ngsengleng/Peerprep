@@ -58,7 +58,7 @@ export default function CodeEditor(props: CodeEditorProps) {
     <div className="editor-container">
       <div className="editor-dropdown">dropdown</div>
       <ReactCodeMirror
-        value={"mewo mewom meow"}
+        value={""}
         theme={myTheme}
         height="90vh"
         className="code-editor"
