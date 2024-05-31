@@ -1,0 +1,15 @@
+.code-editor {
+  text-align: left;
+  scrollbar-color: $contrast-dark $base-color;
+  color: white;
+}
+
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.editor-dropdown {
+  width: 15%;
+}

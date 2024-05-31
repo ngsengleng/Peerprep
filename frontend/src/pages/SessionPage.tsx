@@ -28,6 +28,7 @@ export default function SessionPage() {
   ]); // TODO: remove dummy other user text
   const [chatInput, setChatInput] = useState<string>("");
   const [hidden, setHidden] = useState<boolean>(true);
+  const [roomId, setRoomId] = useState<string>("");
 
   const handleInputChange = (event: FormInputEvent) => {
     event.preventDefault();
@@ -52,7 +53,7 @@ export default function SessionPage() {
     scrollToBottom();
   }, [chatContent]);
   useEffect(() => {
-    console.log(location.pathname.split("/").slice(-1)); // TODO: allow joining of session via url
+    setRoomId(location.pathname.split("/").slice(-1)[0]); // TODO: allow joining of session via url
     // TODO: also, initialise websocket connection using this room name
   }, [location.pathname]);
   return (
@@ -185,7 +186,7 @@ export default function SessionPage() {
           </div>
         </div>
         <div className="session-section">
-          <CodeEditor />
+          <CodeEditor roomId={roomId} />
         </div>
       </div>
     </>
