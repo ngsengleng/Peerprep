@@ -3,6 +3,7 @@ import TextSpace from "../components/TextSpace";
 import { FormInputEvent } from "../types";
 import Modal from "../components/Modal";
 import { useLocation, useNavigate } from "react-router-dom";
+import CodeEditor from "../components/CodeEditor";
 
 type ChatTextObject = {
   username: string;
@@ -178,7 +179,7 @@ export default function SessionPage() {
             </div>
           </div>
         </div>
-        <div className="session-section">this is the coding window</div>
+        <div className="session-section">{/* <CodeEditor /> */}</div>
       </div>
     </>
   );
