@@ -15,7 +15,7 @@ interface CodeEditorProps {
 const myTheme = createTheme({
   theme: `dark`,
   settings: {
-    background: "#353535",
+    background: "#2E2E2E",
     backgroundImage: "",
     foreground: "DEE2E6",
     caret: "#AEAFAD",
@@ -34,6 +34,8 @@ const myTheme = createTheme({
     { tag: t.tagName, color: "#008A02" },
     { tag: t.variableName, color: "#FEE440" },
     { tag: t.literal, color: "#C8B6FF" },
+    { tag: t.definitionKeyword, color: "#b05279" },
+    { tag: t.self, color: "#9E86C8" },
   ],
 });
 
@@ -100,10 +102,7 @@ export default function CodeEditor(props: CodeEditorProps) {
               fill="currentColor"
               viewBox="0 0 16 16"
             >
-              <path
-                fill-rule="evenodd"
-                d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"
-              />
+              <path d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z" />
             </svg>
           ) : (
             <svg
@@ -121,14 +120,16 @@ export default function CodeEditor(props: CodeEditorProps) {
         {isVisible && (
           <div ref={dropdownRef}>
             <ul className="dropdown-items">
-              {Array.from(langOptions).map((option: Language) => (
-                <div
-                  key={option.name}
-                  onClick={() => handleDropdownOptions(option)}
-                >
-                  {option.name}
-                </div>
-              ))}
+              {langOptions
+                .filter((value: Language) => value != currLang)
+                .map((option: Language) => (
+                  <div
+                    key={option.name}
+                    onClick={() => handleDropdownOptions(option)}
+                  >
+                    {option.name}
+                  </div>
+                ))}
             </ul>
           </div>
         )}
