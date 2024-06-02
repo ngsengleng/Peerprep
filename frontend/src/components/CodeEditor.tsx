@@ -1,43 +1,15 @@
 // import * as Y from "yjs";
 import { useEffect, useRef, useState } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import createTheme from "@uiw/codemirror-themes";
-import { tags as t } from "@lezer/highlight";
 import { goLanguage } from "@codemirror/lang-go";
 import { Language } from "@codemirror/language";
 import { pythonLanguage } from "@codemirror/lang-python";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
+import { monokai } from "@uiw/codemirror-theme-monokai";
 
 interface CodeEditorProps {
   roomId: string;
 }
-
-const myTheme = createTheme({
-  theme: `dark`,
-  settings: {
-    background: "#2E2E2E",
-    backgroundImage: "",
-    foreground: "DEE2E6",
-    caret: "#AEAFAD",
-    selection: "#000000",
-    selectionMatch: "#D6D6D6",
-    gutterBackground: "#212121",
-    gutterForeground: "#fefefe",
-    gutterBorder: "#212121",
-    gutterActiveForeground: "",
-    lineHighlight: "#6C757D",
-  },
-  styles: [
-    { tag: t.comment, color: "#00F5D4" },
-    { tag: t.definition(t.typeName), color: "#194A7B" },
-    { tag: t.typeName, color: "#00BBF9" },
-    { tag: t.tagName, color: "#008A02" },
-    { tag: t.variableName, color: "#FEE440" },
-    { tag: t.literal, color: "#C8B6FF" },
-    { tag: t.definitionKeyword, color: "#b05279" },
-    { tag: t.self, color: "#9E86C8" },
-  ],
-});
 
 export default function CodeEditor(props: CodeEditorProps) {
   // const doc = new Y.Doc();
@@ -136,7 +108,7 @@ export default function CodeEditor(props: CodeEditorProps) {
       </div>
       <ReactCodeMirror
         value={""}
-        theme={myTheme}
+        theme={monokai}
         height="90vh"
         className="code-editor"
         lang="go"

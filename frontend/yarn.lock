@@ -636,7 +636,14 @@
     "@codemirror/state" "^6.0.0"
     "@codemirror/view" "^6.0.0"
 
-"@uiw/codemirror-themes@^4.22.1":
+"@uiw/codemirror-theme-monokai@^4.22.1":
+  version "4.22.1"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-monokai/-/codemirror-theme-monokai-4.22.1.tgz#6855c6b9441662e6ded03d91f360776dd0b55457"
+  integrity sha512-rMbhJNetLSs3V8HEN34gFKFA+CN0fmi8OlgCBPHzCqRJ+5K2noWwtJkuzJFg+f6cZP75LS0kj8LF7zrxv91+rA==
+  dependencies:
+    "@uiw/codemirror-themes" "4.22.1"
+
+"@uiw/codemirror-themes@4.22.1", "@uiw/codemirror-themes@^4.22.1":
   version "4.22.1"
   resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.22.1.tgz#e439627572d06ea9840f07d8e80e921aa8ded694"
   integrity sha512-5TeB8wCc0aNd3YEhzOvgekpAFQfEm4fCTUcGmEIQqaRNgKAM83HYNpE1JF2j7x2oDFugdiO0yJynS6bo1zVOuw==
