@@ -9,6 +9,7 @@
   flex-direction: column;
   align-items: left;
   height: 90vh;
+  max-width: calc(50vw - 20px);
 }
 
 .editor-dropdown {

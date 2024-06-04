@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -14,12 +13,11 @@ var addr = flag.String("addr", ":8080", "http service address")
 func main() {
 	flag.Parse()
 	hub := newHub()
-	r := mux.NewRouter();
+	r := mux.NewRouter()
 	go hub.run()
-  r.HandleFunc("/ws/{roomId}", func(w http.ResponseWriter, r *http.Request) {
+  r.HandleFunc("/{roomId}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		fmt.Println("roomId: ", vars["roomId"])
-		serveWs(hub, w, r)
+		serveWs(hub, w, r, vars["roomId"])
 	})
 
 	err := http.ListenAndServe(*addr, r)

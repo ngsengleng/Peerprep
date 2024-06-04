@@ -1,4 +1,3 @@
-// import * as Y from "yjs";
 import { useEffect, useRef, useState } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { goLanguage } from "@codemirror/lang-go";
@@ -6,14 +5,17 @@ import { Language } from "@codemirror/language";
 import { pythonLanguage } from "@codemirror/lang-python";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { monokai } from "@uiw/codemirror-theme-monokai";
+import { useSyncedStore } from "@syncedstore/react";
+import { store, websocketProvider } from "./store";
 
 interface CodeEditorProps {
   roomId: string;
 }
 
 export default function CodeEditor(props: CodeEditorProps) {
-  // const doc = new Y.Doc();
-  const socketRef = useRef<null | WebSocket>(null);
+  const state = useSyncedStore(store);
+
+  // const socketRef = useRef<null | WebSocket>(null);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
   const langOptions: Language[] = [
     pythonLanguage,
@@ -25,23 +27,19 @@ export default function CodeEditor(props: CodeEditorProps) {
   const handleDropdownOptions = (option: Language) => {
     setCurrLang(option);
   };
+
   useEffect(() => {
     if (props.roomId == "") {
       return;
     }
-    const socket = new WebSocket(`ws://localhost:8080/ws/${props.roomId}`);
-    socket.addEventListener("open", () => {
-      socketRef.current = socket;
-    });
-    socket.addEventListener("message", (event) => {
-      console.log("Message from server ", event.data);
-    });
-
+    const wsp = websocketProvider(props.roomId);
+    wsp.connect();
     return () => {
-      socket.close();
+      wsp.disconnect();
     };
   }, [props.roomId]);
 
+  // close dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -107,12 +105,13 @@ export default function CodeEditor(props: CodeEditorProps) {
         )}
       </div>
       <ReactCodeMirror
-        value={""}
+        value={state.text.slice(-1)[0]}
         theme={monokai}
         height="90vh"
         className="code-editor"
         lang="go"
         extensions={[currLang]}
+        onChange={(e: string) => state.text.push(e)}
       />
     </div>
   );

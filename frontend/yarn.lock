@@ -351,6 +351,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@reactivedata/react@^0.2.1":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@reactivedata/react/-/react-0.2.2.tgz#967664b419c6f24b5b292ce50a56c915bac21938"
+  integrity sha512-fJ8qoHRbicQnVcnwfHa9FO73mbHFfl590xpuGM4Mo1P2ClaDATfl9oUrrySE+tbA//M9cn8De8HTwjoNqt91sw==
+  dependencies:
+    "@reactivedata/reactive" "^0.2.2"
+
+"@reactivedata/reactive@^0.2.0", "@reactivedata/reactive@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@reactivedata/reactive/-/reactive-0.2.2.tgz#19d953f691015152b92f8e699905519d99e3a1bd"
+  integrity sha512-KnINM/Sng25QAv6sHkJO9q/XyslLegCF5jTsTSVu+AouY3uZDVf4Am99xNCqsfqFZFvnTBBDvCsHNdvTVGvPEA==
+
 "@remix-run/router@1.16.1":
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.16.1.tgz#73db3c48b975eeb06d0006481bde4f5f2d17d1cd"
@@ -516,6 +528,26 @@
   integrity sha512-scHWahbHF0eyj3JsxG9CFJgFdFNaVQCNAimBlT6PzS3n/HptxqREjsm4OH6AN3lYcffZYSPxXW8ua2BEHp0lJQ==
   dependencies:
     "@swc/counter" "^0.1.3"
+
+"@syncedstore/core@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@syncedstore/core/-/core-0.6.0.tgz#c9df48a88f282e7b7b55dd0ce3d2570a92d666f7"
+  integrity sha512-6TtjEoYJsceYi8u1oRecXwbbLmjHaU0S7HvVfOaEdDfphZLGm/faVuA2fpazqc28F0yIFGvYzvPEBUJn9vqRNw==
+  dependencies:
+    "@reactivedata/reactive" "^0.2.0"
+    "@syncedstore/yjs-reactive-bindings" "^0.6.0"
+
+"@syncedstore/react@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@syncedstore/react/-/react-0.6.0.tgz#a59d79db7414d362cc34aee83b0d13c0569f23c8"
+  integrity sha512-pc8ycnBuH2wp7Td5nGzP9Dn2mEW9Yg1qF0yGdjJ5UdgLEwfRkq+8/hdQl+alcoSribv9St/Bi5hJckX8GVsAbQ==
+  dependencies:
+    "@reactivedata/react" "^0.2.1"
+
+"@syncedstore/yjs-reactive-bindings@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@syncedstore/yjs-reactive-bindings/-/yjs-reactive-bindings-0.6.0.tgz#9b7800163dcfb02f54bea1a57499a99c30d314f1"
+  integrity sha512-VF78h0J4iOt79YU9d6j5E6bFKu7WXYuiI2ue9ZnA+T4SNVn8viRvg0AHm3NqHzudZZUgYT3dpnbv1/ZmU7yPZQ==
 
 "@types/estree@1.0.5":
   version "1.0.5"

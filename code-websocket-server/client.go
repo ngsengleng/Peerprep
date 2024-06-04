@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"log"
 	"net/http"
@@ -26,7 +25,7 @@ const (
 
 var (
 	newline = []byte{'\n'}
-	space   = []byte{' '}
+	// space   = []byte{' '}
 )
 
 var upgrader = websocket.Upgrader{
@@ -43,6 +42,19 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	// websocket room to connect to
+	roomId string
+}
+
+type ClientMessage struct {
+	message []byte
+
+	client Client
+}
+
+func (c *Client) isEqual(other *Client) bool {
+	return c.send == other.send;
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -59,15 +71,20 @@ func (c *Client) readPump() {
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		messageType, message, err := c.conn.ReadMessage()
+		// this is the y-websocket way of signalling that its closed
+		if messageType == -1 {
+			return
+		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				log.Printf("error while reading: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		
+		roomMessage := ClientMessage{message: message, client: *c}
+		c.hub.broadcast <- roomMessage
 	}
 }
 
@@ -92,8 +109,10 @@ func (c *Client) writePump() {
 				return
 			}
 
-			w, err := c.conn.NextWriter(websocket.TextMessage)
+			w, err := c.conn.NextWriter(websocket.BinaryMessage)
+			
 			if err != nil {
+				log.Printf("error while writing: %v", err)
 				return
 			}
 			w.Write(message)
@@ -118,7 +137,7 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, roomId string) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -126,9 +145,9 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("successful connection")
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+	
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), roomId: roomId}
 	client.hub.register <- client
-
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()

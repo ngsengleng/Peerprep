@@ -3,7 +3,7 @@ import TextSpace from "../components/TextSpace";
 import { FormInputEvent } from "../types";
 import Modal from "../components/Modal";
 import { useLocation, useNavigate } from "react-router-dom";
-import CodeEditor from "../components/CodeEditor";
+import CodeEditor from "../components/CodeEditor/CodeEditor";
 import { UserContext } from "../context/UserContext";
 
 type ChatTextObject = {
