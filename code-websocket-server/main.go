@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var addr = flag.String("addr", ":8080", "http service address")
+
 
 func main() {
 	flag.Parse()
@@ -20,6 +20,7 @@ func main() {
 		serveWs(hub, w, r, vars["roomId"])
 	})
 
+	var addr = flag.String("addr", ":8080", "http service address")
 	err := http.ListenAndServe(*addr, r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -141,10 +140,10 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, roomId string) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		log.Printf("error while upgrading: %v", err)
 		return
 	}
-	fmt.Println("successful connection")
+	log.Println("successful connection")
 	
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), roomId: roomId}
 	client.hub.register <- client
