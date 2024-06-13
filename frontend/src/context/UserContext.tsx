@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 type Props = {
   children?: ReactNode;
@@ -19,6 +19,17 @@ const UserContext = createContext<IUserContext>(initialValue);
 
 const UserProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User>(initialValue.user);
+  useEffect(() => {
+    // TODO: remove this, for testing purposes only
+    if (user.username == "") {
+      const name = sessionStorage.getItem("user");
+      if (name != null) {
+        setUser({ ...user, username: name });
+      }
+      return;
+    }
+    sessionStorage.setItem("user", user.username);
+  }, [user]);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       {children}

@@ -1,61 +1,31 @@
-import { KeyboardEvent, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import TextSpace from "../components/TextSpace";
-import { FormInputEvent } from "../types";
 import Modal from "../components/Modal";
 import { useLocation, useNavigate } from "react-router-dom";
 import CodeEditor from "../components/CodeEditor/CodeEditor";
-import { UserContext } from "../context/UserContext";
+import Chatbox from "../components/Chatbox";
 
-type ChatTextObject = {
-  username: string;
-  text: string;
-};
 // text in this section are just placeholders, will be dynamically built with backend integration
 export default function SessionPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
-  const messagesEndRef = useRef<null | HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
-  const [chatContent, setChatContent] = useState<ChatTextObject[]>([
-    {
-      username: "jon",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a diam nisl. Mauris dapibus, neque vitae consectetur cursus, justo ligula sagittis felis, a facilisis ipsum metus in risus. Suspendisse consequat ex et mauris vehicula, dignissim sodales est pretium. Nam ut felis sit amet ipsum ullamcorper rutrum. ",
-    },
-  ]); // TODO: remove dummy other user text
-  const [chatInput, setChatInput] = useState<string>("");
   const [hidden, setHidden] = useState<boolean>(true);
   const [roomId, setRoomId] = useState<string>("");
 
-  const handleInputChange = (event: FormInputEvent) => {
-    event.preventDefault();
-    setChatInput(event.target.value);
-  };
-  const handleSend = () => {
-    if (chatInput == "") {
-      return;
-    }
-    const newChatObject: ChatTextObject = {
-      username: user.username,
-      text: chatInput,
-    };
-    setChatContent([...chatContent, newChatObject]);
-    setChatInput("");
-  };
   const handleLeave = () => {
     // TODO: handle disconnect from websocket and boot other guy out
     navigate("/home");
   };
+
   useEffect(() => {
-    scrollToBottom();
-  }, [chatContent]);
-  useEffect(() => {
-    setRoomId(location.pathname.split("/").slice(-1)[0]); // TODO: allow joining of session via url
-    // TODO: also, initialise websocket connection using this room name
+    const id = location.pathname.split("/").slice(-1)[0];
+    if (id == "") {
+      return;
+    }
+    setRoomId(id);
   }, [location.pathname]);
+
   return (
     <>
       <div className="session-navbar">
@@ -70,7 +40,10 @@ export default function SessionPage() {
           >
             <title />
             <g data-name="1" id="_1">
-              <path d="M353,450a15,15,0,0,1-10.61-4.39L157.5,260.71a15,15,0,0,1,0-21.21L342.39,54.6a15,15,0,1,1,21.22,21.21L189.32,250.1,363.61,424.39A15,15,0,0,1,353,450Z" />
+              <path
+                d="M353,450a15,15,0,0,1-10.61-4.39L157.5,260.71a15,15,0,0,1,0-21.21L342.39,54.6a15,
+              15,0,1,1,21.22,21.21L189.32,250.1,363.61,424.39A15,15,0,0,1,353,450Z"
+              />
             </g>
           </svg>
           <b>leave</b>
@@ -132,58 +105,7 @@ export default function SessionPage() {
               <li>{"-10^9 <= nums[i] <= 10^9"}</li>
             </ul>
           </div>
-          <div className="session-chatbox">
-            <div className="session-chatarea">
-              {chatContent.map((value: ChatTextObject, index: number) => {
-                if (value.username == user.username) {
-                  return (
-                    <div key={index} className="chat-content__current">
-                      <div className="chat-avatar" />
-                      <div className="chat-text">{value.text}</div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={index} className="chat-content__other">
-                      <div className="chat-text">{value.text}</div>
-                      <div className="chat-avatar" />
-                    </div>
-                  );
-                }
-              })}
-              <div ref={messagesEndRef} />
-            </div>
-            <div className="chat-input-container">
-              <input
-                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key == "Enter") {
-                    handleSend();
-                  }
-                }}
-                value={chatInput}
-                className="session-chat-input"
-                onChange={handleInputChange}
-                name="chatInput"
-              />
-              <button className="chat-send-button" onClick={handleSend}>
-                <svg
-                  fill="none"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6 12L3 21L21 12L3 3L6 12ZM6 12L12 12"
-                    stroke="white"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+          <Chatbox roomId={roomId} />
         </div>
         <div className="session-section">
           <CodeEditor roomId={roomId} />

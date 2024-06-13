@@ -12,16 +12,16 @@ import (
 
 func main() {
 	flag.Parse()
-	codeHub := newHub()
+	chatHub := newHub()
 	r := mux.NewRouter()
-	go codeHub.run()
+	go chatHub.run()
 
-  r.HandleFunc("/code/{roomId}", func(w http.ResponseWriter, r *http.Request) {
+  r.HandleFunc("/chat/{roomId}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		serveWs(codeHub, w, r, vars["roomId"])
+		serveWs(chatHub, w, r, vars["roomId"])
 	})
 
-	var addr = flag.String("addr", ":8080", "http service address")
+	var addr = flag.String("addr", ":8081", "http service address")
 	err := http.ListenAndServe(*addr, r)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

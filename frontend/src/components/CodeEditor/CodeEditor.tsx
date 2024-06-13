@@ -6,7 +6,8 @@ import { pythonLanguage } from "@codemirror/lang-python";
 import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { monokai } from "@uiw/codemirror-theme-monokai";
 import { useSyncedStore } from "@syncedstore/react";
-import { store, websocketProvider } from "./store";
+import { store, codeWebsocketProvider } from "./store";
+import { WebsocketProvider } from "y-websocket";
 
 interface CodeEditorProps {
   roomId: string;
@@ -15,7 +16,6 @@ interface CodeEditorProps {
 export default function CodeEditor(props: CodeEditorProps) {
   const state = useSyncedStore(store);
 
-  // const socketRef = useRef<null | WebSocket>(null);
   const dropdownRef = useRef<null | HTMLDivElement>(null);
   const langOptions: Language[] = [
     pythonLanguage,
@@ -24,20 +24,26 @@ export default function CodeEditor(props: CodeEditorProps) {
   ];
   const [currLang, setCurrLang] = useState<Language>(pythonLanguage);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+
   const handleDropdownOptions = (option: Language) => {
     setCurrLang(option);
+    let code: string = "";
+    if (state.contents.slice(-1)[0] != null) {
+      code = state.contents.slice(-1)[0].text;
+    }
+    state.contents.push({ text: code, language: option.name });
   };
-
   useEffect(() => {
     if (props.roomId == "") {
       return;
     }
-    const wsp = websocketProvider(props.roomId);
+    const wsp: WebsocketProvider = codeWebsocketProvider(props.roomId);
     wsp.connect();
+
     return () => {
       wsp.disconnect();
     };
-  }, [props.roomId]);
+  }, [props.roomId, state.contents]);
 
   // close dropdown
   useEffect(() => {
@@ -54,11 +60,38 @@ export default function CodeEditor(props: CodeEditorProps) {
       document.removeEventListener("click", handleClickOutside, true);
     };
   }, [isVisible]);
-
   useEffect(() => {
     setIsVisible(false);
   }, [currLang]);
 
+  // TODO: this is a hacky workaround for syncing language options in two browers until
+  // I figure out how to make changes to the state.contents array recognisable as a side effect
+  // eslint-disable-next-line
+  useEffect(() => {
+    if (state.contents.slice(-1)[0] == null) {
+      return;
+    }
+    const lang: string = state.contents.slice(-1)[0].language;
+    if (lang == currLang.name) {
+      return;
+    }
+    let option: Language;
+    switch (lang) {
+      case "python":
+        option = pythonLanguage;
+        break;
+      case "go":
+        option = goLanguage;
+        break;
+      case "javascript":
+        option = javascriptLanguage;
+        break;
+      default:
+        option = javascriptLanguage;
+    }
+    setCurrLang(option);
+    console.log(option);
+  });
   return (
     <div className="editor-container">
       <div className="editor-dropdown" onClick={() => setIsVisible(true)}>
@@ -86,7 +119,6 @@ export default function CodeEditor(props: CodeEditorProps) {
             </svg>
           )}
         </div>
-
         {isVisible && (
           <div ref={dropdownRef}>
             <ul className="dropdown-items">
@@ -105,13 +137,17 @@ export default function CodeEditor(props: CodeEditorProps) {
         )}
       </div>
       <ReactCodeMirror
-        value={state.text.slice(-1)[0]}
+        value={
+          state.contents.slice(-1)[0] ? state.contents.slice(-1)[0].text : ""
+        }
         theme={monokai}
         height="90vh"
         className="code-editor"
         lang="go"
         extensions={[currLang]}
-        onChange={(e: string) => state.text.push(e)}
+        onChange={(e: string) => {
+          state.contents.push({ text: e, language: currLang.name });
+        }}
       />
     </div>
   );

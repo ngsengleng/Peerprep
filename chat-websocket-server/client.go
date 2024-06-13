@@ -24,7 +24,6 @@ const (
 
 var (
 	newline = []byte{'\n'}
-	// space   = []byte{' '}
 )
 
 var upgrader = websocket.Upgrader{
@@ -56,11 +55,6 @@ func (c *Client) isEqual(other *Client) bool {
 	return c.send == other.send;
 }
 
-// readPump pumps messages from the websocket connection to the hub.
-//
-// The application runs readPump in a per-connection goroutine. The application
-// ensures that there is at most one reader on a connection by executing all
-// reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
 		c.hub.unregister <- c
@@ -71,27 +65,28 @@ func (c *Client) readPump() {
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		messageType, message, err := c.conn.ReadMessage()
-		// this is the y-websocket way of signalling that its closed
-		if messageType == -1 {
+		switch messageType {
+		case -1:
+			log.Println("connection closed")
 			return
+		case websocket.BinaryMessage:
+			log.Println("binary message received")
+		case websocket.TextMessage:
+			log.Println("text message received")
 		}
+
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error while reading: %v", err)
 			}
 			break
 		}
-		log.Println(message, messageType)
+		
 		roomMessage := ClientMessage{message: message, client: *c}
 		c.hub.broadcast <- roomMessage
 	}
 }
 
-// writePump pumps messages from the hub to the websocket connection.
-//
-// A goroutine running writePump is started for each connection. The
-// application ensures that there is at most one writer to a connection by
-// executing all writes from this goroutine.
 func (c *Client) writePump() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
@@ -108,7 +103,7 @@ func (c *Client) writePump() {
 				return
 			}
 
-			w, err := c.conn.NextWriter(websocket.BinaryMessage)
+			w, err := c.conn.NextWriter(websocket.TextMessage)
 			
 			if err != nil {
 				log.Printf("error while writing: %v", err)
@@ -143,12 +138,11 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, roomId string) {
 		log.Printf("error while upgrading: %v", err)
 		return
 	}
-	log.Println("successful connection on code server")
+	log.Println("successful connection on chat server")
 	
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), roomId: roomId}
 	client.hub.register <- client
-	// Allow collection of memory referenced by the caller by doing all work in
-	// new goroutines.
+
 	go client.writePump()
 	go client.readPump()
 }
