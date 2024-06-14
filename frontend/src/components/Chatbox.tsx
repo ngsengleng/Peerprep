@@ -7,19 +7,25 @@ type ChatTextObject = {
   text: string;
 };
 
+type WebsocketEvent<T> = {
+  eventName: string;
+  data: T;
+};
+
+const EventTypes = {
+  Message: "message",
+  Presence: "presence",
+};
+
 interface ChatboxProps {
   roomId: string;
 }
+
 export default function Chatbox(props: ChatboxProps) {
   const { user } = useContext(UserContext);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
   const socketRef = useRef<null | WebSocket>(null);
-  const [chatContent, setChatContent] = useState<ChatTextObject[]>([
-    {
-      username: "jon",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut a diam nisl. Mauris dapibus, neque vitae consectetur cursus, justo ligula sagittis felis, a facilisis ipsum metus in risus. Suspendisse consequat ex et mauris vehicula, dignissim sodales est pretium. Nam ut felis sit amet ipsum ullamcorper rutrum. ",
-    },
-  ]); // TODO: remove dummy other user text
+  const [chatContent, setChatContent] = useState<ChatTextObject[]>([]);
   const [chatInput, setChatInput] = useState<string>("");
 
   // functions
@@ -39,7 +45,11 @@ export default function Chatbox(props: ChatboxProps) {
     };
     setChatContent([...chatContent, newChatObject]);
     setChatInput("");
-    socketRef.current?.send(JSON.stringify(newChatObject));
+    const messageEvent: WebsocketEvent<ChatTextObject> = {
+      eventName: EventTypes.Message,
+      data: newChatObject,
+    };
+    socketRef.current?.send(JSON.stringify(messageEvent));
   };
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,19 +67,36 @@ export default function Chatbox(props: ChatboxProps) {
       `${import.meta.env.VITE_CHATBOX_WS_URL}/chat/${props.roomId}`
     );
     socketRef.current = socket;
+    socket.onopen = () => {
+      const chatObject: ChatTextObject = {
+        username: user.username,
+        text: `${user.username} has joined`,
+      };
+      setChatContent((c) => [...c, chatObject]);
+      const connectEvent: WebsocketEvent<ChatTextObject> = {
+        eventName: EventTypes.Presence,
+        data: chatObject,
+      };
+      socket.send(JSON.stringify(connectEvent));
+    };
     socket.onmessage = (e: MessageEvent) => {
-      setChatContent((c) => [...c, JSON.parse(e.data)]);
+      const json: WebsocketEvent<ChatTextObject> = JSON.parse(e.data);
+      switch (json.eventName) {
+        default:
+          setChatContent((c) => [...c, json.data]);
+          break;
+      }
     };
     return () => {
       socket.close();
     };
-  }, [props.roomId]);
+  }, [props.roomId, user.username]);
 
   return (
     <div className="session-chatbox">
       <div className="session-chatarea">
         {chatContent.map((value: ChatTextObject, index: number) => {
-          if (value.username == user.username) {
+          if (value.username != user.username) {
             return (
               <div key={index} className="chat-content__current">
                 <div className="chat-avatar" />

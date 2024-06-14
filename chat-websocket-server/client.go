@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -43,12 +44,25 @@ type Client struct {
 
 	// websocket room to connect to
 	roomId string
+
+	// user identifier
+	userId string
 }
 
 type ClientMessage struct {
 	message []byte
 
 	client Client
+}
+
+type ChatObject struct {
+	Username string `json:"username"`
+	Text string     `json:"text"`
+}
+
+type Event struct {
+	EventName string  `json:"eventName"`
+	Data ChatObject   `json:"data"`
 }
 
 func (c *Client) isEqual(other *Client) bool {
@@ -73,6 +87,13 @@ func (c *Client) readPump() {
 			log.Println("binary message received")
 		case websocket.TextMessage:
 			log.Println("text message received")
+			if c.userId != "" {
+				break
+			}
+			val := Event{}
+			json.Unmarshal(message, &val)
+			c.userId = val.Data.Username
+			
 		}
 
 		if err != nil {

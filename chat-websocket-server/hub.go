@@ -1,6 +1,10 @@
 package main
 
-import "log"
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+)
 
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
@@ -37,9 +41,23 @@ func (h *Hub) run() {
 			h.clients[client.roomId][client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client.roomId]; ok {
-				for client := range h.clients[client.roomId] {
-					close(client.send)
+				delete(h.clients[client.roomId], client)
+				for other := range h.clients[client.roomId] {
+					chatObj := ChatObject{
+						Username: client.userId, 
+						Text: fmt.Sprintf("%v has left", client.userId),
+					}
+					disconnectEvent := Event{EventName: "message", Data: chatObj}
+					msgObj, err := json.Marshal(disconnectEvent)
+					if err != nil {
+						log.Printf("error while marshalling disconnect, %v", err)
+						continue
+					}
+					other.send <- msgObj
 				}
+			}
+			// empty room, should delete
+			if len(h.clients[client.roomId]) == 0 {
 				delete(h.clients, client.roomId)
 			}
 		case message := <-h.broadcast:
