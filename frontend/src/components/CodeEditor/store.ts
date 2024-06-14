@@ -15,6 +15,6 @@ export const codeWebsocketProvider = (roomId: string) => {
     `${import.meta.env.VITE_EDITOR_WS_URL}/code`,
     roomId,
     doc,
-    { connect: false }
+    { connect: false, maxBackoffTime: 50000 } // 5 minute between reconnects maximum
   );
 };
