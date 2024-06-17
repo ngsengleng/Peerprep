@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FormGridItem from "../components/FormGridItem";
 import FormGrid from "../components/FormGrid";
@@ -6,16 +6,22 @@ import { SubmitFormEvent, FormInputEvent } from "../types";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import { UserContext } from "../context/UserContext";
+import axios, { AxiosResponse } from "axios";
+import useAuth from "../hooks/useAuth";
 
+type LoginResp = {
+  loginSuccess: boolean;
+  username: string;
+};
 export default function LoginPage() {
   const navigate = useNavigate();
-
+  const { setAuth } = useAuth();
   const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
   const [isInvalidUsername, setIsInvalidUsername] = useState<boolean>(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false);
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
 
   const handleUsernameChange = (event: FormInputEvent) => {
     event.preventDefault();
@@ -35,10 +41,32 @@ export default function LoginPage() {
       console.log("failed login");
       return;
     }
-    console.log("login"); // TODO: handle login and redirect
-    setUser({ username: username });
-    navigate("/home");
+    axios
+      .post(
+        `${import.meta.env.VITE_AUTH_URL}/login`,
+        {
+          username: username,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res: AxiosResponse) => {
+        const body: LoginResp = res.data;
+        if (body.loginSuccess) {
+          setAuth(username);
+          setLoginSuccess(body.loginSuccess);
+          setUser({ username: username });
+        }
+      });
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      navigate("/home");
+    }
+  }, [loginSuccess, navigate]);
   return (
     <>
       <div className="login-title">
