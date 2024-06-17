@@ -19,7 +19,8 @@ run `yarn dev` in the root directory
 
 ### Progress:
 
-- Only frontend code has been written, no backend functionality has been implemented
+- Most pages have the UI implemented already
+- websocket servers for chat and code editor have been written
 - some implementations on the frontend may change depending on how endpoints are written; currently alot of dynamic elements are hardcoded
 
 ### Todo:
