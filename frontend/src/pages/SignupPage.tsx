@@ -4,8 +4,10 @@ import FormGridItem from "../components/FormGridItem";
 import InputField from "../components/InputField";
 import { FormInputEvent, SubmitFormEvent } from "../types";
 import PasswordField from "../components/PasswordField";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -49,6 +51,7 @@ export default function SignupPage() {
       return;
     }
     console.log("sign up"); // TODO: handle sign up and redirect
+    navigate("/home"); // TODO: automatically logs in
   };
   return (
     <>

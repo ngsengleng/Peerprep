@@ -10,12 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@codemirror/lang-go": "^6.0.1",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/language": "^6.10.1",
+    "@syncedstore/core": "^0.6.0",
+    "@syncedstore/react": "^0.6.0",
+    "@uiw/codemirror-theme-monokai": "^4.22.1",
+    "@uiw/codemirror-themes": "^4.22.1",
+    "@uiw/react-codemirror": "^4.22.1",
     "localforage": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "sass": "^1.77.2",
-    "unique-names-generator": "^4.7.1"
+    "unique-names-generator": "^4.7.1",
+    "y-websocket": "^2.0.3",
+    "yjs": "^13.6.15"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

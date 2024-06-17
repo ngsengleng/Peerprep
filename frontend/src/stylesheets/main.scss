@@ -3,6 +3,8 @@
 @import "base/typography";
 
 @import "components/body";
+@import "components/chatbox";
+@import "components/codeEditor";
 @import "components/displayTable";
 @import "components/formButton";
 @import "components/formGrid";
@@ -16,6 +18,7 @@
 @import "pages/error";
 @import "pages/home";
 @import "pages/login";
+@import "pages/session";
 @import "pages/signup";
 
 @import "themes/theme";

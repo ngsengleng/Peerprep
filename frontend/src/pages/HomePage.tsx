@@ -9,6 +9,7 @@ import {
   colors,
   uniqueNamesGenerator,
 } from "unique-names-generator";
+import { useNavigate } from "react-router-dom";
 
 const generatorNameConfig: Config = {
   dictionaries: [adjectives, colors, animals],
@@ -17,16 +18,29 @@ const generatorNameConfig: Config = {
 };
 
 export default function HomePage() {
-  const [isHidden, setIsHidden] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const [isCreateHidden, setIsCreateHidden] = useState<boolean>(true);
+  const [isJoinHidden, setIsJoinHidden] = useState<boolean>(true);
   const [sessionName, setSessionName] = useState<string>(
     uniqueNamesGenerator(generatorNameConfig)
   );
+  const [joinSessionName, setJoinSessionName] = useState<string>("");
+
   const handleChange = (event: FormInputEvent) => {
     setSessionName(event.target.value);
   };
+  const handleJoinNameChange = (event: FormInputEvent) => {
+    setJoinSessionName(event.target.value);
+  };
   const handleSubmit = () => {
     console.log(sessionName); // TODO: pass to backend websocket to initiate a room
-    setIsHidden(true);
+    setIsCreateHidden(true);
+    navigate(`/session/${sessionName}`);
+  };
+  const handleRedirect = () => {
+    console.log(joinSessionName); // TODO: check if room exists
+    setIsCreateHidden(true);
+    navigate(`/session/${joinSessionName}`);
   };
   return (
     <>
@@ -36,11 +50,14 @@ export default function HomePage() {
       <div className="home-button-group">
         <button
           className="home-redirect-button"
-          onClick={() => setIsHidden(false)}
+          onClick={() => setIsCreateHidden(false)}
         >
           <b>Create a new session</b>
         </button>
-        <button className="home-redirect-button">
+        <button
+          className="home-redirect-button"
+          onClick={() => setIsJoinHidden(false)}
+        >
           <b>Join an existing room</b>
         </button>
       </div>
@@ -48,7 +65,7 @@ export default function HomePage() {
         rawData={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]}
         hasPagination={false}
       />
-      <Modal isHidden={isHidden} setHidden={setIsHidden}>
+      <Modal isHidden={isCreateHidden} setHidden={setIsCreateHidden}>
         <h2>Enter your session name</h2>
         <input
           className="home-modal-input"
@@ -58,6 +75,17 @@ export default function HomePage() {
         />
         <button onClick={handleSubmit} className="home-modal-button">
           <b>start session</b>
+        </button>
+      </Modal>
+      <Modal isHidden={isJoinHidden} setHidden={setIsJoinHidden}>
+        <h2>Enter your session name</h2>
+        <input
+          className="home-modal-input"
+          value={joinSessionName}
+          onChange={handleJoinNameChange}
+        />
+        <button onClick={handleRedirect} className="home-modal-button">
+          <b>join session</b>
         </button>
       </Modal>
     </>

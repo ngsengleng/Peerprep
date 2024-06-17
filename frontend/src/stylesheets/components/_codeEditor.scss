@@ -1,0 +1,45 @@
+.code-editor {
+  text-align: left;
+  scrollbar-color: $contrast-dark $base-color;
+  color: white;
+}
+
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  height: 90vh;
+  max-width: calc(50vw - 20px);
+}
+
+.editor-dropdown {
+  width: 150px;
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}
+
+.dropdown-items {
+  background-color: #dee2e6;
+  color: $contrast-light;
+  position: absolute;
+  z-index: 1;
+  list-style-type: none;
+  top: 24px;
+  left: 0;
+  right: 0;
+  width: 164px;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown__current {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 164px;
+}
+
+.dropdown-text__current {
+  width: 100%;
+}
