@@ -6,13 +6,14 @@ import { SubmitFormEvent, FormInputEvent } from "../types";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import { UserContext } from "../context/UserContext";
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
 import useAuth from "../hooks/useAuth";
 
 type LoginResp = {
   loginSuccess: boolean;
   username: string;
 };
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
@@ -38,7 +39,6 @@ export default function LoginPage() {
     setIsInvalidUsername(!username);
     setIsInvalidPassword(!password);
     if (!username || !password) {
-      console.log("failed login");
       return;
     }
     axios
@@ -58,6 +58,19 @@ export default function LoginPage() {
           setAuth(username);
           setLoginSuccess(body.loginSuccess);
           setUser({ username: username });
+        }
+      })
+      .catch((error: AxiosError) => {
+        const statusCode = error.response?.status;
+        switch (statusCode) {
+          case HttpStatusCode.BadRequest:
+            console.log("login: bad request");
+            break;
+          case HttpStatusCode.InternalServerError:
+            console.log("login: error with server");
+            break;
+          default:
+            console.log("login: error submitting login request");
         }
       });
   };

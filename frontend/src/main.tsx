@@ -1,10 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  redirect,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./stylesheets/main.scss";
 import ErrorPage from "./pages/ErrorPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
@@ -12,6 +8,7 @@ import SignupPage from "./pages/SignupPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import SessionPage from "./pages/SessionPage.tsx";
 import { UserProvider } from "./context/UserContext.tsx";
+import PrivateRoutes from "./components/PrivateRoutes.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,18 +23,17 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: "/home",
-        element: <HomePage />,
-      },
-      {
-        path: "/session/:roomName",
-        element: <SessionPage />,
-      },
-      {
-        path: "/",
-        loader: async () => {
-          return redirect("/login");
-        },
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/home",
+            element: <HomePage />,
+          },
+          {
+            path: "/session/:roomName",
+            element: <SessionPage />,
+          },
+        ],
       },
     ],
   },

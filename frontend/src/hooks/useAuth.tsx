@@ -6,8 +6,12 @@ export default function useAuth() {
     if (!auth) {
       return sessionStorage.getItem("authToken");
     }
+    return auth;
   };
   useEffect(() => {
+    if (!auth) {
+      return;
+    }
     sessionStorage.setItem("authToken", auth);
   }, [auth]);
 

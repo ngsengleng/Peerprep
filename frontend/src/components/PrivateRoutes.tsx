@@ -1,11 +1,16 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
 
 export default function PrivateRoutes() {
   const { getAuthToken } = useAuth();
-  if (!getAuthToken) {
-    return <Navigate to={"/login"} />;
-  }
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!getAuthToken()) {
+      console.log("no entry");
+      navigate("/login");
+    }
+  }, [navigate, getAuthToken]);
   return <Outlet />;
 }
