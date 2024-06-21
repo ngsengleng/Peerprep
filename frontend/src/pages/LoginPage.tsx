@@ -6,13 +6,9 @@ import { SubmitFormEvent, FormInputEvent } from "../types";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
 import { UserContext } from "../context/UserContext";
-import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import useAuth from "../hooks/useAuth";
-
-type LoginResp = {
-  loginSuccess: boolean;
-  username: string;
-};
+import { ErrorCode, ErrorResp, LoginResp } from "../http/httpTypes";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -58,19 +54,26 @@ export default function LoginPage() {
           setAuth(username);
           setLoginSuccess(body.loginSuccess);
           setUser({ username: username });
+          return;
+        }
+        switch (body.errorCode) {
+          case ErrorCode.USER_DOES_NOT_EXIST:
+            window.alert("this user does not exist");
+            break;
+          case ErrorCode.INCORRECT_PASSWORD:
+            window.alert("password is incorrect");
+            break;
         }
       })
       .catch((error: AxiosError) => {
-        const statusCode = error.response?.status;
-        switch (statusCode) {
-          case HttpStatusCode.BadRequest:
-            console.log("login: bad request");
-            break;
-          case HttpStatusCode.InternalServerError:
-            console.log("login: error with server");
-            break;
+        const res = error.response?.data as ErrorResp;
+        if (res == null) {
+          console.log("unknown error");
+          return;
+        }
+        switch (res.errorCode) {
           default:
-            console.log("login: error submitting login request");
+            window.alert("some error occurred when logging in");
         }
       });
   };

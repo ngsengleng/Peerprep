@@ -4,15 +4,11 @@ import FormGridItem from "../components/FormGridItem";
 import InputField from "../components/InputField";
 import { FormInputEvent, SubmitFormEvent } from "../types";
 import PasswordField from "../components/PasswordField";
-import { useNavigate } from "react-router-dom";
-import axios, { AxiosResponse, AxiosError, HttpStatusCode } from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../context/UserContext";
-
-type SignupResp = {
-  signupSuccess: boolean;
-  username: string;
-};
+import { ErrorCode, ErrorResp, SignupResp } from "../http/httpTypes";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -77,19 +73,23 @@ export default function SignupPage() {
           setAuth(username);
           setSignupSuccess(body.signupSuccess);
           setUser({ username: username });
+          return;
+        }
+
+        switch (body.errorCode) {
+          case ErrorCode.USER_EXISTS:
+            window.alert("user already exists");
         }
       })
       .catch((error: AxiosError) => {
-        const statusCode = error.response?.status;
-        switch (statusCode) {
-          case HttpStatusCode.BadRequest:
-            console.log("signup: bad request");
-            break;
-          case HttpStatusCode.InternalServerError:
-            console.log("signup: error with server");
-            break;
+        const res = error.response?.data as ErrorResp;
+        if (res == null) {
+          console.log("unknown error");
+          return;
+        }
+        switch (res.errorCode) {
           default:
-            console.log("signup: error submitting signup request");
+            window.alert("some error occurred when signing up");
         }
       });
   };
@@ -147,6 +147,9 @@ export default function SignupPage() {
             <button className="form-button" type="submit">
               <b>Sign up</b>
             </button>
+          </FormGridItem>
+          <FormGridItem>
+            <Link to={"/login"}>Back to login</Link>
           </FormGridItem>
         </form>
       </FormGrid>

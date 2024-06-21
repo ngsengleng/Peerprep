@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CodeEditor from "../components/CodeEditor/CodeEditor";
 import Chatbox from "../components/Chatbox";
 
-// text in this section are just placeholders, will be dynamically built with backend integration
 export default function SessionPage() {
   const location = useLocation();
   const navigate = useNavigate();
