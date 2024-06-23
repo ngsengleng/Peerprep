@@ -10,6 +10,8 @@ import (
 	"github.com/rs/cors"
 )
 
+
+
 func main() {
 	godotenv.Load() // loads the env file
 	connString := os.Getenv("DB_URL")

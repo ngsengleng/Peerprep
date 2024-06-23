@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/ngsengleng/PeerPrep/pbDefinitions/tokenverifier";
+option go_package = "github.com/ngsengleng/PeerPrep/auth-server/tokenverifier";
 
 package tokenverifier;
 
