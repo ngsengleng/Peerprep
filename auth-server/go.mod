@@ -1,4 +1,4 @@
-module auth-server
+module github.com/ngsengleng/PeerPrep/auth-server
 
 go 1.22.3
 
