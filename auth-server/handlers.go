@@ -26,7 +26,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		})
 		return
 	}
-	if user.password != body.Password {
+	if !CheckPasswordHash(body.Password, user.password) {
 		json.NewEncoder(w).Encode(LoginResp{
 			LoginSuccess: false, 
 			ErrorCode: INCORRECT_PASSWORD,
@@ -64,9 +64,15 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		ErrorHandler(w, http.StatusInternalServerError, UNKNOWN, "internal server error")
 		return
 	}
+	hashedPassword, err := HashPassword(body.Password)
+	if err != nil {
+		log.Printf("signup: failed to hash password: %v", err)
+		ErrorHandler(w, http.StatusInternalServerError, UNKNOWN, err.Error())
+		return
+	}
 	statusCode, err := db.insertUser(UserTableEntry{
 		username: body.Username,
-		password: body.Password,
+		password: hashedPassword,
 		token: token,
 	})
 	switch (statusCode) {
