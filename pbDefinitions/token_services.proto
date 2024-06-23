@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/ngsengleng/PeerPrep/pbDefinitions/token_services";
+
+package token_services;
+
+service TokenServices {
+  rpc VerifyToken (VerifyRequest) returns (VerifyReply) {}
+}
+
+message VerifyRequest {
+  string token = 1;
+}
+
+message VerifyReply {
+  bool isValid = 1;
+}
