@@ -46,7 +46,6 @@ func (db *Database) getUser(user UserTableEntry) UserTableEntry {
 }
 
 func (db *Database) insertUser(user UserTableEntry) (ErrorCode, error) {
-	// TODO: encrypt password before inserting into db
 	args := pgx.NamedArgs{
 		"username": user.username,
 		"password": user.password,
@@ -66,3 +65,12 @@ func (db *Database) insertUser(user UserTableEntry) (ErrorCode, error) {
 	return -1, nil
 }
 
+func (db *Database) updateToken(user string, token string) (ErrorCode, error) {
+	query := "UPDATE users SET sessiontoken=$1 WHERE username=$2"
+	_, err := db.conn.Query(context.Background(), query, token, user)
+	if err != nil {
+		return UNKNOWN, err
+	}
+
+	return -1, nil
+}

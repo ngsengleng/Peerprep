@@ -33,11 +33,23 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		})
 		return
 	}
-	token, err := createToken(body.Username)
-	if err != nil {
-		log.Printf("login: error creating auth token: %v", err)
-		ErrorHandler(w, http.StatusInternalServerError, UNKNOWN, err.Error())
-		return
+
+	var token string
+	if ValidToken(user.token) {
+		token = user.token
+	} else {
+		token, err = CreateToken(body.Username)
+		if err != nil {
+			log.Printf("login: error creating auth token: %v", err)
+			ErrorHandler(w, http.StatusInternalServerError, UNKNOWN, err.Error())
+			return
+		}
+		errorCode, err := db.updateToken(body.Username, token)
+		if err != nil {
+			log.Printf("Error updating token: %v", err)
+			ErrorHandler(w, http.StatusInternalServerError, errorCode, err.Error())
+			return
+		}
 	}
 	cookie := http.Cookie{
 		Name: os.Getenv("JWT_COOKIE_KEY"),
@@ -58,7 +70,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		ErrorHandler(w, http.StatusBadRequest, BAD_JSON, "bad json")
 		return
 	}
-	token, err := createToken(body.Username)
+	token, err := CreateToken(body.Username)
 	if err != nil {
 		log.Printf("signup: error creating auth token: %v", err)
 		ErrorHandler(w, http.StatusInternalServerError, UNKNOWN, "internal server error")

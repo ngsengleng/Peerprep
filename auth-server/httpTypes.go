@@ -7,6 +7,7 @@ const (
 	USER_EXISTS
 	USER_DOES_NOT_EXIST
 	INCORRECT_PASSWORD
+	TOKEN_EXPIRED
 )
 
 type LoginBody struct {
