@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,6 +19,19 @@ func main() {
 
   r.HandleFunc("/chat/{roomId}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
+		cookie, err := r.Cookie("jwtTokenAuth")
+		if err != nil {
+			log.Printf("could not retrieve cookie")
+		}
+		if cookie == nil {
+			log.Printf("no cookie was found, guest user") // do something about guest users?
+		} else {
+			if !ValidateJwtToken(cookie.Value) {
+				fmt.Printf("invalid token")
+				http.Error(w, "unauthorized or session expired", http.StatusUnauthorized)
+				return
+			}
+		}
 		serveWs(chatHub, w, r, vars["roomId"])
 	})
 

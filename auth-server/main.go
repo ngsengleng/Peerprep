@@ -33,7 +33,7 @@ func main() {
 			AllowedOrigins: []string{dev_url},
 			AllowCredentials: true,
 	})
-
+	go NewRpcServer()
 	err := http.ListenAndServe(":8082", c.Handler(router))
 	if err != nil {
 			log.Printf("Error while serving: %v", err)
