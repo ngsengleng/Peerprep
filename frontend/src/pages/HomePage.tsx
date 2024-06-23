@@ -21,6 +21,7 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [isCreateHidden, setIsCreateHidden] = useState<boolean>(true);
   const [isJoinHidden, setIsJoinHidden] = useState<boolean>(true);
+  const [hasEmptyRoomName, setHasEmptyRoomName] = useState<boolean>(false);
   const [sessionName, setSessionName] = useState<string>(
     uniqueNamesGenerator(generatorNameConfig)
   );
@@ -38,6 +39,10 @@ export default function HomePage() {
     navigate(`/session/${sessionName}`);
   };
   const handleRedirect = () => {
+    if (!joinSessionName) {
+      setHasEmptyRoomName(true);
+      return;
+    }
     console.log(joinSessionName); // TODO: check if room exists
     setIsCreateHidden(true);
     navigate(`/session/${joinSessionName}`);
@@ -84,6 +89,9 @@ export default function HomePage() {
           value={joinSessionName}
           onChange={handleJoinNameChange}
         />
+        {hasEmptyRoomName && (
+          <span className="error-text">name cannot be empty</span>
+        )}
         <button onClick={handleRedirect} className="home-modal-button">
           <b>join session</b>
         </button>

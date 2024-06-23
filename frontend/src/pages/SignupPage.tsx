@@ -8,7 +8,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosResponse, AxiosError } from "axios";
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../context/UserContext";
-import { ErrorCode, ErrorResp, SignupResp } from "../http/httpTypes";
+import {
+  ErrorCode,
+  ErrorResp,
+  SignupBody,
+  SignupResp,
+} from "../http/httpTypes";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -56,17 +61,14 @@ export default function SignupPage() {
     if (!username || !password) {
       return;
     }
+    const signupReqObj: SignupBody = {
+      username: username,
+      password: password,
+    };
     axios
-      .post(
-        `${import.meta.env.VITE_AUTH_URL}/signup`,
-        {
-          username: username,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      )
+      .post(`${import.meta.env.VITE_AUTH_URL}/signup`, signupReqObj, {
+        withCredentials: true,
+      })
       .then((res: AxiosResponse) => {
         const body: SignupResp = res.data;
         if (body.signupSuccess) {

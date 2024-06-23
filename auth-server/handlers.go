@@ -20,7 +20,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		password: body.Password,
 	})
 	if user == (UserTableEntry{}) {
-		// log.Printf("login: user does not exist: %v", body.Username)
 		json.NewEncoder(w).Encode(LoginResp{
 			LoginSuccess: false, 
 			ErrorCode: USER_DOES_NOT_EXIST,
@@ -28,7 +27,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		return
 	}
 	if user.password != body.Password {
-		// log.Printf("login: incorrect password: %v", body.Password)
 		json.NewEncoder(w).Encode(LoginResp{
 			LoginSuccess: false, 
 			ErrorCode: INCORRECT_PASSWORD,
@@ -77,7 +75,6 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, db Database) {
 		ErrorHandler(w, http.StatusInternalServerError, statusCode, err.Error())
 		return
 		case USER_EXISTS:
-		// log.Printf("signup: user already exists: %v", err)
 		json.NewEncoder(w).Encode(SignupResp{
 			SignupSuccess: false, 
 			ErrorCode: USER_EXISTS,
@@ -98,7 +95,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, db Database) {
 }
 
 func ErrorHandler(w http.ResponseWriter, httpCode int, errorCode ErrorCode, errorMessage string) {
-	respObj, err := json.Marshal(SignupErrorResp{ErrorCode: errorCode, ErrorMesage: errorMessage})
+	respObj, err := json.Marshal(ErrorResp{ErrorCode: errorCode, ErrorMesage: errorMessage})
 	if err != nil {
 		log.Printf("error marshalling error resp: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

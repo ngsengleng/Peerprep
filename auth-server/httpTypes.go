@@ -31,7 +31,7 @@ type SignupResp struct {
 	ErrorCode ErrorCode `json:"errorCode"`
 }
 
-type SignupErrorResp struct {
+type ErrorResp struct {
 	ErrorCode ErrorCode `json:"errorCode"`
 	ErrorMesage string `json:"errorMessage"`
 }

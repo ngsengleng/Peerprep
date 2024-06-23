@@ -8,18 +8,40 @@ import PasswordField from "../components/PasswordField";
 import { UserContext } from "../context/UserContext";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import useAuth from "../hooks/useAuth";
-import { ErrorCode, ErrorResp, LoginResp } from "../http/httpTypes";
+import { ErrorCode, ErrorResp, LoginBody, LoginResp } from "../http/httpTypes";
+import Modal from "../components/Modal";
+import {
+  Config,
+  adjectives,
+  animals,
+  colors,
+  uniqueNamesGenerator,
+} from "unique-names-generator";
+
+const generatorNameConfig: Config = {
+  dictionaries: [adjectives, colors, animals],
+  separator: "_",
+  length: 2,
+};
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
   const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState<string>("");
+  const [guestUser, setGuestUser] = useState<string>(
+    uniqueNamesGenerator(generatorNameConfig)
+  );
   const [password, setPassword] = useState<string>("");
   const [isInvalidUsername, setIsInvalidUsername] = useState<boolean>(false);
   const [isInvalidPassword, setIsInvalidPassword] = useState<boolean>(false);
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
+  const [modalHidden, setModalHidden] = useState<boolean>(true);
 
+  const handleGuestChange = (event: FormInputEvent) => {
+    event.preventDefault();
+    setGuestUser(event.target.value);
+  };
   const handleUsernameChange = (event: FormInputEvent) => {
     event.preventDefault();
     setUsername(event.target.value);
@@ -30,6 +52,12 @@ export default function LoginPage() {
     setPassword(event.target.value);
     setIsInvalidPassword(!event.target.value);
   };
+  const handleGuestUser = () => {
+    setUser({ username: guestUser });
+    setAuth(guestUser);
+    setLoginSuccess(true);
+  };
+
   const handleSubmit = (event: SubmitFormEvent) => {
     event.preventDefault();
     setIsInvalidUsername(!username);
@@ -37,17 +65,14 @@ export default function LoginPage() {
     if (!username || !password) {
       return;
     }
+    const reqLoginObj: LoginBody = {
+      username: username,
+      password: password,
+    };
     axios
-      .post(
-        `${import.meta.env.VITE_AUTH_URL}/login`,
-        {
-          username: username,
-          password: password,
-        },
-        {
-          withCredentials: true,
-        }
-      )
+      .post(`${import.meta.env.VITE_AUTH_URL}/login`, reqLoginObj, {
+        withCredentials: true,
+      })
       .then((res: AxiosResponse) => {
         const body: LoginResp = res.data;
         if (body.loginSuccess) {
@@ -123,9 +148,24 @@ export default function LoginPage() {
           </FormGridItem>
           <FormGridItem>
             <Link to={"/signup"}>Create an account</Link>
+            <div>Or</div>
+            <a href="#" onClick={() => setModalHidden(false)}>
+              Continue as guest
+            </a>
           </FormGridItem>
         </form>
       </FormGrid>
+      <Modal isHidden={modalHidden} setHidden={setModalHidden}>
+        <h2>Enter your guest username</h2>
+        <input
+          value={guestUser}
+          className="login-modal-input"
+          onChange={handleGuestChange}
+        />
+        <button className="login-modal-button" onClick={handleGuestUser}>
+          <strong>Continue</strong>
+        </button>
+      </Modal>
     </>
   );
 }

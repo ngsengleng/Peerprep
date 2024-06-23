@@ -3,3 +3,22 @@
   margin-bottom: 50px;
   width: 500px;
 }
+
+.login-modal-input {
+  width: 80%;
+  height: 2rem;
+  border-style: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.login-modal-button {
+  width: 200px;
+  height: 2rem;
+  margin: 20px 0;
+  border-style: none;
+  border-radius: 5px;
+  background-color: $accents;
+  color: $contrast-light;
+}

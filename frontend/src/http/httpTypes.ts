@@ -1,3 +1,8 @@
+export type SignupBody = {
+  username: string;
+  password: string;
+};
+
 export type SignupResp = {
   signupSuccess: boolean;
   username?: string;
@@ -7,6 +12,11 @@ export type SignupResp = {
 export type ErrorResp = {
   errorCode: number;
   errorMessage: string;
+};
+
+export type LoginBody = {
+  username: string;
+  password: string;
 };
 
 export type LoginResp = {
