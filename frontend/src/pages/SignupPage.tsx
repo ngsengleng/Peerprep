@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FormGrid from "../components/FormGrid";
 import FormGridItem from "../components/FormGridItem";
 import InputField from "../components/InputField";
 import { FormInputEvent, SubmitFormEvent } from "../types";
 import PasswordField from "../components/PasswordField";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios, { AxiosResponse, AxiosError } from "axios";
+import useAuth from "../hooks/useAuth";
+import { UserContext } from "../context/UserContext";
+import {
+  ErrorCode,
+  ErrorResp,
+  SignupBody,
+  SignupResp,
+} from "../http/httpTypes";
 
 export default function SignupPage() {
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
+  const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -16,6 +27,7 @@ export default function SignupPage() {
   const [isMissingPassword, setIsMissingPassword] = useState<boolean>(false);
   const [isMissingConfirm, setIsMissingConfirm] = useState<boolean>(false);
   const [isInvalidConfirm, setIsInvalidConfirm] = useState<boolean>(false);
+  const [signupSuccess, setSignupSuccess] = useState<boolean>(false);
 
   const handleUsernameChange = (event: FormInputEvent) => {
     event.preventDefault();
@@ -47,12 +59,48 @@ export default function SignupPage() {
       return;
     }
     if (!username || !password) {
-      console.log("failed signup");
       return;
     }
-    console.log("sign up"); // TODO: handle sign up and redirect
-    navigate("/home"); // TODO: automatically logs in
+    const signupReqObj: SignupBody = {
+      username: username,
+      password: password,
+    };
+    axios
+      .post(`${import.meta.env.VITE_AUTH_URL}/signup`, signupReqObj, {
+        withCredentials: true,
+      })
+      .then((res: AxiosResponse) => {
+        const body: SignupResp = res.data;
+        if (body.signupSuccess) {
+          setAuth(username);
+          setSignupSuccess(body.signupSuccess);
+          setUser({ username: username });
+          return;
+        }
+
+        switch (body.errorCode) {
+          case ErrorCode.USER_EXISTS:
+            window.alert("user already exists");
+        }
+      })
+      .catch((error: AxiosError) => {
+        const res = error.response?.data as ErrorResp;
+        if (res == null) {
+          console.log("unknown error");
+          return;
+        }
+        switch (res.errorCode) {
+          default:
+            window.alert("some error occurred when signing up");
+        }
+      });
   };
+
+  useEffect(() => {
+    if (signupSuccess) {
+      navigate("/home");
+    }
+  }, [signupSuccess, navigate]);
   return (
     <>
       <div className="spacer" />
@@ -101,6 +149,9 @@ export default function SignupPage() {
             <button className="form-button" type="submit">
               <b>Sign up</b>
             </button>
+          </FormGridItem>
+          <FormGridItem>
+            <Link to={"/login"}>Back to login</Link>
           </FormGridItem>
         </form>
       </FormGrid>

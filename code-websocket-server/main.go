@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -18,6 +19,11 @@ func main() {
 
   r.HandleFunc("/code/{roomId}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
+		if cookie, _ := r.Cookie("jwtTokenAuth"); cookie == nil {
+			fmt.Println("failed")
+		} else {
+			fmt.Println(cookie.Value)
+		}
 		serveWs(codeHub, w, r, vars["roomId"])
 	})
 

@@ -12,6 +12,7 @@ import SignupPage from "./pages/SignupPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import SessionPage from "./pages/SessionPage.tsx";
 import { UserProvider } from "./context/UserContext.tsx";
+import PrivateRoutes from "./components/PrivateRoutes.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,18 +27,23 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
-        path: "/home",
-        element: <HomePage />,
-      },
-      {
-        path: "/session/:roomName",
-        element: <SessionPage />,
-      },
-      {
         path: "/",
         loader: async () => {
           return redirect("/login");
         },
+      },
+      {
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/home",
+            element: <HomePage />,
+          },
+          {
+            path: "/session/:roomName",
+            element: <SessionPage />,
+          },
+        ],
       },
     ],
   },
