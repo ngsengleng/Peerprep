@@ -16,8 +16,11 @@ this project uses the plugin [@vitejs/plugin-react-swc](https://github.com/vitej
 
 ### File structure
 
-- stylesheets are written with `sass` using the 7-1 architecture design pattern with a main file that imports all relevant stylesheets
-- Each application page has its own file with shared components extracted out to a common component folder
+- frontend:
+  - stylesheets are written with `sass` using the 7-1 architecture design pattern with a main file that imports all relevant stylesheets
+  - Each application page has its own file with shared components extracted out to a common component folder
+- backend:
+  - files are named with reference to their purposes e.g. `handlers.go` contains handler functions for handling http requests
 
 ### Progress:
 
