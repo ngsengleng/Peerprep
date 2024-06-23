@@ -6,11 +6,13 @@ this project uses the plugin [@vitejs/plugin-react-swc](https://github.com/vitej
 
 ### Installation
 
-run `yarn install` in the root directory
+- run `yarn install` in the `/frontend` directory
+- run `go mod tidy` in the `/*-server` directories
 
 ### Running the dev environment
 
-run `yarn dev` in the root directory
+- run `yarn dev` in the `/frontend` directory
+- run `go run .` in the rest of the `/*-server` directories
 
 ### File structure
 
@@ -21,6 +23,7 @@ run `yarn dev` in the root directory
 
 - Most pages have the UI implemented already
 - websocket servers for chat and code editor have been written
+- auth server is being written
 - some implementations on the frontend may change depending on how endpoints are written; currently alot of dynamic elements are hardcoded
 
 ### Todo:
