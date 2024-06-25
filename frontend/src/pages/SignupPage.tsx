@@ -85,7 +85,7 @@ export default function SignupPage() {
       })
       .catch((error: AxiosError) => {
         const res = error.response?.data as ErrorResp;
-        if (res === null || res === undefined) {
+        if (res == null) {
           console.log("unknown error");
           return;
         }

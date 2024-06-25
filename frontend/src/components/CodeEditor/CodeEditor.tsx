@@ -68,7 +68,7 @@ export default function CodeEditor(props: CodeEditorProps) {
   // I figure out how to make changes to the state.contents array recognisable as a side effect
   // eslint-disable-next-line
   useEffect(() => {
-    if (state.contents.slice(-1)[0] === undefined) {
+    if (state.contents.slice(-1)[0] == null) {
       return;
     }
     const lang: string = state.contents.slice(-1)[0].language;
