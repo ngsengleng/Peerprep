@@ -34,7 +34,7 @@ export default function Chatbox(props: ChatboxProps) {
     setChatInput(event.target.value);
   };
   const handleSend = () => {
-    if (chatInput == "") {
+    if (chatInput === "") {
       return;
     }
     const newChatObject: ChatTextObject = {
@@ -60,7 +60,7 @@ export default function Chatbox(props: ChatboxProps) {
     scrollToBottom();
   }, [chatContent]);
   useEffect(() => {
-    if (props.roomId == "") {
+    if (props.roomId === "") {
       return;
     }
     const socket = new WebSocket(
@@ -117,7 +117,7 @@ export default function Chatbox(props: ChatboxProps) {
       <div className="chat-input-container">
         <input
           onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-            if (e.key == "Enter") {
+            if (e.key === "Enter") {
               handleSend();
             }
           }}

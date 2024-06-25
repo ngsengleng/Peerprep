@@ -13,13 +13,12 @@ export default function SessionPage() {
   const [roomId, setRoomId] = useState<string>("");
 
   const handleLeave = () => {
-    // TODO: handle disconnect from websocket and boot other guy out
     navigate("/home");
   };
 
   useEffect(() => {
     const id = location.pathname.split("/").slice(-1)[0];
-    if (id == "") {
+    if (id === "") {
       return;
     }
     setRoomId(id);

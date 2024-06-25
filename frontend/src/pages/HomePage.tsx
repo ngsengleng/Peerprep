@@ -34,7 +34,6 @@ export default function HomePage() {
     setJoinSessionName(event.target.value);
   };
   const handleSubmit = () => {
-    console.log(sessionName); // TODO: pass to backend websocket to initiate a room
     setIsCreateHidden(true);
     navigate(`/session/${sessionName}`);
   };

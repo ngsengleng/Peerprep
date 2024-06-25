@@ -34,7 +34,7 @@ export default function CodeEditor(props: CodeEditorProps) {
     state.contents.push({ text: code, language: option.name });
   };
   useEffect(() => {
-    if (props.roomId == "") {
+    if (props.roomId === "") {
       return;
     }
     const wsp: WebsocketProvider = codeWebsocketProvider(props.roomId);
@@ -68,11 +68,11 @@ export default function CodeEditor(props: CodeEditorProps) {
   // I figure out how to make changes to the state.contents array recognisable as a side effect
   // eslint-disable-next-line
   useEffect(() => {
-    if (state.contents.slice(-1)[0] == null) {
+    if (state.contents.slice(-1)[0] === undefined) {
       return;
     }
     const lang: string = state.contents.slice(-1)[0].language;
-    if (lang == currLang.name) {
+    if (lang === currLang.name) {
       return;
     }
     let option: Language;
@@ -90,7 +90,6 @@ export default function CodeEditor(props: CodeEditorProps) {
         option = javascriptLanguage;
     }
     setCurrLang(option);
-    console.log(option);
   });
   return (
     <div className="editor-container">

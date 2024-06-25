@@ -92,7 +92,7 @@ export default function LoginPage() {
       })
       .catch((error: AxiosError) => {
         const res = error.response?.data as ErrorResp;
-        if (res == null) {
+        if (res === undefined || res === null) {
           console.log("unknown error");
           return;
         }

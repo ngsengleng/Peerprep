@@ -49,7 +49,7 @@ export default function DisplayTable<T extends ReactNode>(
                 <tr key={index}>
                   <td
                     className={
-                      index % 2 == 0
+                      index % 2 === 0
                         ? "display-table-row--even"
                         : "display-table-row--odd"
                     }
@@ -74,7 +74,7 @@ export default function DisplayTable<T extends ReactNode>(
                   onClick={() => handlePagination(v)}
                   key={v}
                   className={
-                    paginationState == v
+                    paginationState === v
                       ? "pagination-button--selected"
                       : "pagination-button--unselected"
                   }
