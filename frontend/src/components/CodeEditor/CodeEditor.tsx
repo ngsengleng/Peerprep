@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import ReactCodeMirror from "@uiw/react-codemirror";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { goLanguage } from "@codemirror/lang-go";
 import { Language } from "@codemirror/language";
 import { pythonLanguage } from "@codemirror/lang-python";
@@ -7,8 +6,8 @@ import { javascriptLanguage } from "@codemirror/lang-javascript";
 import { monokai } from "@uiw/codemirror-theme-monokai";
 import { useSyncedStore } from "@syncedstore/react";
 import { store, codeWebsocketProvider } from "./store";
-import { WebsocketProvider } from "y-websocket";
 
+const ReactCodeMirror = lazy(() => import("@uiw/react-codemirror"));
 interface CodeEditorProps {
   roomId: string;
 }
@@ -37,7 +36,7 @@ export default function CodeEditor(props: CodeEditorProps) {
     if (props.roomId === "") {
       return;
     }
-    const wsp: WebsocketProvider = codeWebsocketProvider(props.roomId);
+    const wsp = codeWebsocketProvider(props.roomId);
     wsp.connect();
 
     return () => {
@@ -135,19 +134,21 @@ export default function CodeEditor(props: CodeEditorProps) {
           </div>
         )}
       </div>
-      <ReactCodeMirror
-        value={
-          state.contents.slice(-1)[0] ? state.contents.slice(-1)[0].text : ""
-        }
-        theme={monokai}
-        height="90vh"
-        className="code-editor"
-        lang="go"
-        extensions={[currLang]}
-        onChange={(e: string) => {
-          state.contents.push({ text: e, language: currLang.name });
-        }}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ReactCodeMirror
+          value={
+            state.contents.slice(-1)[0] ? state.contents.slice(-1)[0].text : ""
+          }
+          theme={monokai}
+          height="90vh"
+          className="code-editor"
+          lang="go"
+          extensions={[currLang]}
+          onChange={(e: string) => {
+            state.contents.push({ text: e, language: currLang.name });
+          }}
+        />
+      </Suspense>
     </div>
   );
 }
